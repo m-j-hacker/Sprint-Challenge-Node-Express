@@ -35,4 +35,13 @@ router.post('/', (req, res) => {
     .catch(() => res.status(400).json({ error: "Please provide a name and descripton for the project." }))
 })
 
+router.get('/:id', (req, res) => {
+    const id = req.params.id;
+    projectDb.get(id)
+    .then(project => {
+        res.status(200).json(project)
+    })
+    .catch(() => res.status(404).json({ message: "The project with the specified ID does not exist"}))
+})
+
 module.exports = router;
