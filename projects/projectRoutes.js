@@ -16,10 +16,7 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     console.log(req.body);
     const { name, description } = req.body;
-    const newProject = { name, description };
-    // if (req.body.completed) {
-    //     newProject += { req.body.completed }
-    // }
+    const newProject = { name, description }
     projectDb.insert(newProject)
     .then(projectId => {
         const { id } = projectId;
@@ -42,6 +39,34 @@ router.get('/:id', (req, res) => {
         res.status(200).json(project)
     })
     .catch(() => res.status(404).json({ message: "The project with the specified ID does not exist"}))
+})
+
+router.put('/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, description } = req.body;
+    const newProject = { name, description };
+    projectDb.update(id, newProject)
+    .then(project => {
+        console.log('project = ', project);
+        if (!project) {
+            return res.status(404).json({ message: "The post with the specified ID does not exist."})
+        } else {
+            res.status(200).json(newProject)
+        }
+    })
+    .catch(() => res.status(500).json({ error: "The project information could not be modified."}))
+})
+
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+    projectDb.remove(id)
+    .then(removedUser => {
+        if (removedUser === 0) {
+            return res.status(404).json({ message: "The user with the specified ID does not exist"})
+        } else
+        return res.status(200).json(removedUser);
+    })
+    .catch(() => res.status(500).json({ error: "The user could not be removed" }))
 })
 
 module.exports = router;
