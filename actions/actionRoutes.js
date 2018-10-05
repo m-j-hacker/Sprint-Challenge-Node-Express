@@ -41,6 +41,21 @@ router.get('/:id', (req, res) => {
     .catch(() => res.status(404).json({ message: "The action with the specified ID does not exist"}))
 })
 
+router.put('/:id', (req, res) => {
+    const { id } = req.params;
+    const { project_id, description, notes } = req.body;
+    const newAction = { project_id, description, notes };
+    actionDb.update(id, newAction)
+    .then(action => {
+        if (!action) {
+            return res.status(404).json({ message: "The action with the specified ID does not exist" })
+        } else {
+            res.status(200).json(action);
+        }
+    })
+    .catch(() => res.status(500).json({ error: "The action information could not be updated." }))
+})
+
 
 
 module.exports = router;
