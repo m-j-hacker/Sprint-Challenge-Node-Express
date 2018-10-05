@@ -2,7 +2,10 @@ const express = require('express');
 
 const router = express.Router();
 
+const actionRoutes = require('../actions/actionRoutes.js');
 const projectDb = require('../data/helpers/projectModel.js');
+
+router.use('/:id/actions', actionRoutes);
 
 router.get('/', (req, res) => {
     projectDb.get()
