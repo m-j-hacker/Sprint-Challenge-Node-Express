@@ -1,3 +1,6 @@
+const actionRoutes = require('./actions/actionRoutes.js');
+const projectRoutes = require('./projects/projectRoutes.js');
+
 const express = require('express');
 
 const helmet = require('helmet');
@@ -9,6 +12,7 @@ const server = express();
 server.use(logger('combined'));
 server.use(helmet());
 server.use(cors());
+server.use(express.json());
 
 const port = 9898;
 server.listen(port, () => {
