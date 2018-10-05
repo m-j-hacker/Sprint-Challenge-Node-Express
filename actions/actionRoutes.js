@@ -56,6 +56,17 @@ router.put('/:id', (req, res) => {
     .catch(() => res.status(500).json({ error: "The action information could not be updated." }))
 })
 
-
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+    actionDb.remove(id)
+    .then(removed => {
+        if (removed === 0) {
+            return res.status(404).json({ message: "The action with the specified ID does not exist. "})
+        } else {
+            res.status(200).json(removed);
+        }
+    })
+    .catch(() => res.status(500).json({ error: "The action could not be removed"}))
+})
 
 module.exports = router;
