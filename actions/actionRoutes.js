@@ -4,6 +4,25 @@ const router = express.Router();
 
 const actionDb = require('../data/helpers/actionModel.js');
 
+router.post('/', (req, res) => {
+    console.log(req.body);
+    const { project_id, description, notes } = req.body;
+    const newAction = { project_id, description, notes };
+    actionDb.insert(newAction)
+    .then(actionId => {
+        const { id } = actionId;
+        actionDb.get(id)
+        .then(action => {
+            if (!action) {
+                return res.status(404).json({ message: "The action with the specified ID does not exist."})
+            } else
+            return res.status(201).json(action);
+        })
+        .catch(() => res.status(500).json({ error: "there was an error while saving the action"}))
+    })
+    .catch(() => res.status(400).json({ error: "Please provide a project ID, description, and notes for the action"}))
+})
+
 router.get('/', (req, res) => {
     actionDb.get()
     .then(actions => {
@@ -21,5 +40,7 @@ router.get('/:id', (req, res) => {
     })
     .catch(() => res.status(404).json({ message: "The action with the specified ID does not exist"}))
 })
+
+
 
 module.exports = router;
